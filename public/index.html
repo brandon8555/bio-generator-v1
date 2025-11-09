@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BioGen AI - Générateur de Bio Instagram & TikTok</title>
+  <meta name="description" content="Génère des bios créatives pour Instagram, TikTok et autres réseaux sociaux avec l'IA">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen">
+  
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fas fa-sparkles text-purple-600 text-2xl"></i>
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          BioGen AI
+        </h1>
+      </div>
+      <div id="authButtons" class="space-x-2">
+        <button onclick="showAuthModal('login')" class="px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-lg transition">
+          Connexion
+        </button>
+        <button onclick="showAuthModal('register')" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+          Inscription
+        </button>
+      </div>
+      <div id="userMenu" class="hidden space-x-4 items-center">
+        <span id="userEmail" class="text-gray-600"></span>
+        <span id="premiumBadge" class="hidden px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm font-bold rounded-full">
+          ⭐ PREMIUM
+        </span>
+        <button onclick="logout()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+          Déconnexion
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="container mx-auto px-4 py-12 text-center">
+    <h2 class="text-5xl font-bold text-gray-800 mb-4">
+      Crée ta bio parfaite en <span class="text-purple-600">10 secondes</span> ✨
+    </h2>
+    <p class="text-xl text-gray-600 mb-8">
+      Génère des bios créatives et optimisées pour Instagram, TikTok, Twitter avec l'IA
+    </p>
+    
+    <!-- Usage Counter -->
+    <div id="usageCounter" class="hidden mb-6">
+      <div class="inline-block bg-white px-6 py-3 rounded-full shadow-md">
+        <span class="text-gray-700">Générations aujourd'hui : </span>
+        <span id="usageCount" class="font-bold text-purple-600">0</span>
+        <span id="usageLimit" class="text-gray-500">/ 3</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Generator Form -->
+  <section class="container mx-auto px-4 max-w-2xl">
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <form id="generatorForm" class="space-y-6">
+        
+        <!-- Platform Selection -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-mobile-alt text-purple-600"></i> Plateforme
+          </label>
+          <div class="grid grid-cols-4 gap-3">
+            <button type="button" class="platform-btn active" data-platform="instagram">
+              <i class="fab fa-instagram"></i> Instagram
+            </button>
+            <button type="button" class="platform-btn" data-platform="tiktok">
+              <i class="fab fa-tiktok"></i> TikTok
+            </button>
+            <button type="button" class="platform-btn" data-platform="twitter">
+              <i class="fab fa-twitter"></i> Twitter
+            </button>
+            <button type="button" class="platform-btn" data-platform="linkedin">
+              <i class="fab fa-linkedin"></i> LinkedIn
+            </button>
+          </div>
+        </div>
+
+        <!-- Name Input -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-user text-purple-600"></i> Ton nom ou pseudo
+          </label>
+          <input 
+            type="text" 
+            id="name" 
+            required
+            placeholder="Ex: Marie, @fitness_coach, TechGuru..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+          >
+        </div>
+
+        <!-- Niche Input -->
+        <div>
+          <label for="niche" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-hashtag text-purple-600"></i> Ta niche / thématique
+          </label>
+          <input 
+            type="text" 
+            id="niche" 
+            required
+            placeholder="Ex: Fitness, Gaming, Cuisine, Mode, Tech..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+          >
+        </div>
+
+        <!-- Style Selection -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-palette text-purple-600"></i> Style
+          </label>
+          <select 
+            id="style" 
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+          >
+            <option value="créative">Créative ✨</option>
+            <option value="professionnelle">Professionnelle 💼</option>
+            <option value="fun">Fun & Décalée 🎉</option>
+            <option value="minimaliste">Minimaliste 🎯</option>
+            <option value="inspirante">Inspirante 🌟</option>
+          </select>
+        </div>
+
+        <!-- Generate Button -->
+        <button 
+          type="submit" 
+          id="generateBtn"
+          class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-pink-700 transition transform hover:scale-105 shadow-lg"
+        >
+          <i class="fas fa-magic"></i> Générer ma bio
+        </button>
+      </form>
+
+      <!-- Result Section -->
+      <div id="resultSection" class="hidden mt-8 space-y-4">
+        <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-lg">
+          <div class="flex justify-between items-start mb-3">
+            <h3 class="text-lg font-bold text-gray-800">
+              <i class="fas fa-check-circle text-green-500"></i> Ta nouvelle bio :
+            </h3>
+            <button onclick="copyBio()" class="px-4 py-2 bg-white text-purple-600 rounded-lg hover:bg-purple-50 transition text-sm font-medium">
+              <i class="fas fa-copy"></i> Copier
+            </button>
+          </div>
+          <p id="generatedBio" class="text-xl text-gray-800 leading-relaxed"></p>
+        </div>
+        
+        <button onclick="generateAnother()" class="w-full py-3 border-2 border-purple-600 text-purple-600 rounded-lg font-medium hover:bg-purple-50 transition">
+          <i class="fas fa-redo"></i> Générer une autre version
+        </button>
+      </div>
+    </div>
+
+    <!-- Upgrade CTA -->
+    <div id="upgradeCTA" class="hidden mt-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl shadow-xl p-8 text-white text-center">
+      <h3 class="text-3xl font-bold mb-3">🚀 Limite atteinte !</h3>
+      <p class="text-lg mb-6">Passe à Premium pour des générations illimitées + templates exclusifs</p>
+      <button onclick="upgradeToPremium()" class="bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition transform hover:scale-105">
+        Devenir Premium - 4,99€/mois
+      </button>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="container mx-auto px-4 py-16">
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-bolt text-purple-600 text-2xl"></i>
+        </div>
+        <h3 class="font-bold text-lg mb-2">Ultra rapide</h3>
+        <p class="text-gray-600">Génère ta bio en moins de 10 secondes</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-brain text-pink-600 text-2xl"></i>
+        </div>
+        <h3 class="font-bold text-lg mb-2">IA puissante</h3>
+        <p class="text-gray-600">Propulsé par GPT pour des résultats uniques</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-infinity text-purple-600 text-2xl"></i>
+        </div>
+        <h3 class="font-bold text-lg mb-2">Illimité en Premium</h3>
+        <p class="text-gray-600">Génère autant de bios que tu veux</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="modalTitle" class="text-2xl font-bold text-gray-800">Connexion</h3>
+        <button onclick="closeAuthModal()" class="text-gray-400 hover:text-gray-600">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+      </div>
+      
+      <form id="authForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+          <input 
+            type="email" 
+            id="authEmail" 
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+          >
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+          <input 
+            type="password" 
+            id="authPassword" 
+            required
+            minlength="6"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+          >
+        </div>
+        <button 
+          type="submit" 
+          class="w-full bg-purple-600 text-white py-3 rounded-lg font-bold hover:bg-purple-700 transition"
+        >
+          <span id="authSubmitText">Se connecter</span>
+        </button>
+      </form>
+      
+      <p class="text-center text-gray-600 mt-4">
+        <span id="authSwitchText">Pas encore de compte ?</span>
+        <button onclick="toggleAuthMode()" class="text-purple-600 font-medium ml-1">
+          <span id="authSwitchBtn">S'inscrire</span>
+        </button>
+      </p>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="hidden fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+    <span id="toastMessage"></span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="container mx-auto px-4 py-8 text-center text-gray-600">
+    <p>&copy; 2024 BioGen AI - Tous droits réservés</p>
+    <p class="text-sm mt-2">Propulsé par OpenAI GPT-3.5</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
